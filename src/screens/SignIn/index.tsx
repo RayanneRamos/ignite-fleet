@@ -1,6 +1,4 @@
-import { Text, View } from "react-native";
 import { Container, Slogan, Title } from "./styles";
-import { StatusBar } from "expo-status-bar";
 import backgroundImage from "../../assets/background.png";
 import { Button } from "../../components/Button";
 
