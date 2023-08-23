@@ -4,7 +4,15 @@ import { Header } from "../../components/Header";
 import { LicensePlateInput } from "../../components/LicensePlateInput";
 import { TextAreaInput } from "../../components/TextAreaInput";
 import { Container, Content } from "./styles";
-import { TextInput } from "react-native";
+import {
+  TextInput,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
+
+const keyboardAvoidViewBehavior =
+  Platform.OS === "android" ? "height" : "position";
 
 export function Departure() {
   const descriptionRef = useRef<TextInput>(null);
@@ -16,23 +24,30 @@ export function Departure() {
   return (
     <Container>
       <Header title="Saída" />
-      <Content>
-        <LicensePlateInput
-          label="Placa do veículo"
-          placeholder="BRA1234"
-          onSubmitEditing={() => descriptionRef.current?.focus()}
-          returnKeyType="next"
-        />
-        <TextAreaInput
-          ref={descriptionRef}
-          label="Finalidade"
-          placeholder="Vou utilizar o veículo para..."
-          onSubmitEditing={handleDepartureRegister}
-          returnKeyType="send"
-          blurOnSubmit
-        />
-        <Button title="Registrar Saída" onPress={handleDepartureRegister} />
-      </Content>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={keyboardAvoidViewBehavior}
+      >
+        <ScrollView>
+          <Content>
+            <LicensePlateInput
+              label="Placa do veículo"
+              placeholder="BRA1234"
+              onSubmitEditing={() => descriptionRef.current?.focus()}
+              returnKeyType="next"
+            />
+            <TextAreaInput
+              ref={descriptionRef}
+              label="Finalidade"
+              placeholder="Vou utilizar o veículo para..."
+              onSubmitEditing={handleDepartureRegister}
+              returnKeyType="send"
+              blurOnSubmit
+            />
+            <Button title="Registrar Saída" onPress={handleDepartureRegister} />
+          </Content>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </Container>
   );
 }
