@@ -12,6 +12,10 @@ import {
   Alert,
 } from "react-native";
 import { licensePlateValidate } from "../../utils/licensePlateValidate";
+import { useRealm } from "../../libs/realm";
+import { Historic } from "../../libs/realm/schemas/Historic";
+import { useUser } from "@realm/react";
+import { useNavigation } from "@react-navigation/native";
 
 const keyboardAvoidViewBehavior =
   Platform.OS === "android" ? "height" : "position";
@@ -22,6 +26,9 @@ export function Departure() {
   const [description, setDescription] = useState("");
   const [licensePlate, setLicensePlate] = useState("");
   const [isRegistering, setIsRegistering] = useState(false);
+  const realm = useRealm();
+  const user = useUser();
+  const { goBack } = useNavigation();
 
   function handleDepartureRegister() {
     try {
@@ -42,6 +49,20 @@ export function Departure() {
       }
 
       setIsRegistering(true);
+
+      realm.write(() => {
+        realm.create(
+          "Historic",
+          Historic.generate({
+            user_id: user!.id,
+            license_plate: licensePlate.toUpperCase(),
+            description,
+          })
+        );
+      });
+
+      Alert.alert("Saída", "Saída do veículo registrada com sucesso!");
+      goBack();
     } catch (error) {
       console.log(error);
       Alert.alert("Erro", "Não foi possível registrar a saída do veículo.");
