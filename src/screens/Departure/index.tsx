@@ -21,14 +21,31 @@ export function Departure() {
   const licensePlateRef = useRef<TextInput>(null);
   const [description, setDescription] = useState("");
   const [licensePlate, setLicensePlate] = useState("");
+  const [isRegistering, setIsRegistering] = useState(false);
 
   function handleDepartureRegister() {
-    if (!licensePlateValidate(licensePlate)) {
-      licensePlateRef.current?.focus();
-      return Alert.alert(
-        "Placa inválida",
-        "A placa do veículo é inválida. Por favor, informe a placa correta do veículo."
-      );
+    try {
+      if (!licensePlateValidate(licensePlate)) {
+        licensePlateRef.current?.focus();
+        return Alert.alert(
+          "Placa inválida",
+          "A placa do veículo é inválida. Por favor, informe a placa correta do veículo."
+        );
+      }
+
+      if (description.trim().length === 0) {
+        descriptionRef.current?.focus();
+        return Alert.alert(
+          "Finalidade",
+          "Por favor, informe a finalidade da utilização do veículo."
+        );
+      }
+
+      setIsRegistering(true);
+    } catch (error) {
+      console.log(error);
+      Alert.alert("Erro", "Não foi possível registrar a saída do veículo.");
+      setIsRegistering(false);
     }
   }
 
@@ -58,7 +75,11 @@ export function Departure() {
               blurOnSubmit
               onChangeText={setDescription}
             />
-            <Button title="Registrar Saída" onPress={handleDepartureRegister} />
+            <Button
+              title="Registrar Saída"
+              onPress={handleDepartureRegister}
+              isLoading={isRegistering}
+            />
           </Content>
         </ScrollView>
       </KeyboardAvoidingView>
