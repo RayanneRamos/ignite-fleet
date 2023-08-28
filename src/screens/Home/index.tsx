@@ -64,6 +64,10 @@ export function Home() {
     }
   }
 
+  function handleHistoricDetails(id: string) {
+    navigate("arrival", { id });
+  }
+
   useEffect(() => {
     fetchVehicleInUse();
   }, []);
@@ -90,7 +94,12 @@ export function Home() {
         <FlatList
           data={vehicleHistoric}
           keyExtractor={(item) => item.id}
-          renderItem={({ item }) => <HistoricCard data={item} />}
+          renderItem={({ item }) => (
+            <HistoricCard
+              data={item}
+              onPress={() => handleHistoricDetails(item.id)}
+            />
+          )}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: 100 }}
           ListEmptyComponent={

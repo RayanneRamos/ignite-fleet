@@ -18,7 +18,7 @@ export function HistoricCard({ data, ...rest }: Props) {
   const theme = useTheme();
 
   return (
-    <Container {...rest}>
+    <Container activeOpacity={0.7} {...rest}>
       <Info>
         <LicensePlate>{data.licensePlate}</LicensePlate>
         <Departure>{data.created}</Departure>
