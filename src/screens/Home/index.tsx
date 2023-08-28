@@ -1,18 +1,23 @@
 import { useNavigation } from "@react-navigation/native";
 import { CarStatus } from "../../components/CarStatus";
 import { HomeHeader } from "../../components/HomeHeader";
-import { Container, Content } from "./styles";
+import { Container, Content, Label, Title } from "./styles";
 import { useQuery, useRealm } from "../../libs/realm";
 import { Historic } from "../../libs/realm/schemas/Historic";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Alert } from "react-native";
-import { HistoricCard } from "../../components/HistoricCard";
+import { HistoricCard, HistoricCardProps } from "../../components/HistoricCard";
+import dayjs from "dayjs";
+import { FlatList } from "react-native";
 
 export function Home() {
   const { navigate } = useNavigation();
   const historic = useQuery(Historic);
   const [vehicleInUse, setVehicleInUse] = useState<Historic | null>(null);
   const realm = useRealm();
+  const [vehicleHistoric, setVehicleHistoric] = useState<HistoricCardProps[]>(
+    []
+  );
 
   function handleRegisterMovement() {
     if (vehicleInUse?._id) {
@@ -37,9 +42,26 @@ export function Home() {
   }
 
   function fetchHistoric() {
-    const response = historic.filtered(
-      "status = 'arrival' SORT(created_at DESC)"
-    );
+    try {
+      const response = historic.filtered(
+        "status = 'arrival' SORT(created_at DESC)"
+      );
+      const formattedHistoric = response.map((item) => {
+        return {
+          id: item._id!.toString(),
+          licensePlate: item.license_plate,
+          created: dayjs(item.created_at).format(
+            "[Saída em] DD/MM/YYYY [às] HH:mm"
+          ),
+          isSync: false,
+        };
+      });
+
+      setVehicleHistoric(formattedHistoric);
+    } catch (error) {
+      console.log(error);
+      Alert.alert("Histórico", "Não foi possível carregar o histórico.");
+    }
   }
 
   useEffect(() => {
@@ -64,8 +86,16 @@ export function Home() {
           onPress={handleRegisterMovement}
           licensePlate={vehicleInUse?.license_plate}
         />
-        <HistoricCard
-          data={{ created: "20/04", licensePlate: "XXX1212", isSync: true }}
+        <Title>Histórico</Title>
+        <FlatList
+          data={vehicleHistoric}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => <HistoricCard data={item} />}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingBottom: 100 }}
+          ListEmptyComponent={
+            <Label>Nenhum registro de utilização de veículo.</Label>
+          }
         />
       </Content>
     </Container>
