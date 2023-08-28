@@ -13,7 +13,11 @@ export function Home() {
   const [vehicleInUse, setVehicleInUse] = useState<Historic | null>(null);
 
   function handleRegisterMovement() {
-    navigate("departure");
+    if (vehicleInUse?._id) {
+      return navigate("arrival", { id: vehicleInUse._id.toString() });
+    } else {
+      navigate("departure");
+    }
   }
 
   function fetchVehicle() {
