@@ -71,8 +71,7 @@ export function Home() {
   }
 
   function progressNotification(transferred: number, transfereable: number) {
-    console.log("transferred =>", transferred);
-    console.log("transfereable =>", transfereable);
+    const percentage = (transferred / transfereable) * 100;
   }
 
   useEffect(() => {
