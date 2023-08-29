@@ -11,7 +11,12 @@ import { Historic } from "../../libs/realm/schemas/Historic";
 import { useUser } from "@realm/react";
 import { useNavigation } from "@react-navigation/native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { useForegroundPermissions } from "expo-location";
+import {
+  useForegroundPermissions,
+  watchPositionAsync,
+  LocationAccuracy,
+  LocationSubscription,
+} from "expo-location";
 
 export function Departure() {
   const descriptionRef = useRef<TextInput>(null);
@@ -68,6 +73,25 @@ export function Departure() {
   useEffect(() => {
     requestLocationForegroundPermission();
   }, []);
+
+  useEffect(() => {
+    if (!locationForegroundPermission?.granted) {
+      return;
+    }
+
+    let subscription: LocationSubscription;
+    watchPositionAsync(
+      {
+        accuracy: LocationAccuracy.High,
+        timeInterval: 1000,
+      },
+      (location) => {
+        console.log(location);
+      }
+    ).then((response) => (subscription = response));
+
+    return () => subscription.remove();
+  }, [locationForegroundPermission]);
 
   if (!locationForegroundPermission?.granted) {
     return (
