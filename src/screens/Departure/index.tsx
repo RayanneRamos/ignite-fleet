@@ -20,6 +20,7 @@ import {
 import { getAddressLocation } from "../../utils/getAddressLocation";
 import { Loading } from "../../components/Loading";
 import { LocationInfo } from "../../components/LocationInfo";
+import { Car } from "phosphor-react-native";
 
 export function Departure() {
   const descriptionRef = useRef<TextInput>(null);
@@ -133,6 +134,7 @@ export function Departure() {
           <Content>
             {currentAddress && (
               <LocationInfo
+                icon={Car}
                 label="Localização atual"
                 description={currentAddress}
               />
