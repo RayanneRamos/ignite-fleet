@@ -18,6 +18,7 @@ import {
   LocationSubscription,
 } from "expo-location";
 import { getAddressLocation } from "../../utils/getAddressLocation";
+import { Loading } from "../../components/Loading";
 
 export function Departure() {
   const descriptionRef = useRef<TextInput>(null);
@@ -30,6 +31,7 @@ export function Departure() {
   const { goBack } = useNavigation();
   const [locationForegroundPermission, requestLocationForegroundPermission] =
     useForegroundPermissions();
+  const [isLoadingLocation, setIsLoadingLocation] = useState(true);
 
   function handleDepartureRegister() {
     try {
@@ -87,13 +89,19 @@ export function Departure() {
         timeInterval: 1000,
       },
       (location) => {
-        getAddressLocation(location.coords).then((address) => {
-          console.log(address);
-        });
+        getAddressLocation(location.coords)
+          .then((address) => {
+            console.log(address);
+          })
+          .finally(() => setIsLoadingLocation(false));
       }
     ).then((response) => (subscription = response));
 
-    return () => subscription.remove();
+    return () => {
+      if (subscription) {
+        subscription.remove();
+      }
+    };
   }, [locationForegroundPermission]);
 
   if (!locationForegroundPermission?.granted) {
@@ -107,6 +115,10 @@ export function Departure() {
         </Message>
       </Container>
     );
+  }
+
+  if (isLoadingLocation) {
+    return <Loading />;
   }
 
   return (
