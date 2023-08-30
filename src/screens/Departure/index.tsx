@@ -16,11 +16,13 @@ import {
   watchPositionAsync,
   LocationAccuracy,
   LocationSubscription,
+  LocationObjectCoords,
 } from "expo-location";
 import { getAddressLocation } from "../../utils/getAddressLocation";
 import { Loading } from "../../components/Loading";
 import { LocationInfo } from "../../components/LocationInfo";
 import { Car } from "phosphor-react-native";
+import { Maps } from "../../components/Maps";
 
 export function Departure() {
   const descriptionRef = useRef<TextInput>(null);
@@ -35,6 +37,8 @@ export function Departure() {
     useForegroundPermissions();
   const [isLoadingLocation, setIsLoadingLocation] = useState(true);
   const [currentAddress, setCurrentAddress] = useState<string | null>(null);
+  const [currentCoords, setCurrentCoords] =
+    useState<LocationObjectCoords | null>(null);
 
   function handleDepartureRegister() {
     try {
@@ -92,6 +96,7 @@ export function Departure() {
         timeInterval: 1000,
       },
       (location) => {
+        setCurrentCoords(location.coords);
         getAddressLocation(location.coords)
           .then((address) => {
             if (address) {
@@ -131,6 +136,7 @@ export function Departure() {
       <Header title="Saída" />
       <KeyboardAwareScrollView extraHeight={100}>
         <ScrollView>
+          {currentCoords && <Maps coordinates={[currentCoords]} />}
           <Content>
             {currentAddress && (
               <LocationInfo
