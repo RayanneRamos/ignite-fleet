@@ -19,6 +19,7 @@ import { Alert } from "react-native";
 import { useEffect, useState } from "react";
 import { getLastAsyncTimestamp } from "../../libs/asyncStorage/syncStorage";
 import { stopLocationTask } from "../../tasks/backgroundLocationTask";
+import { getStorageLocations } from "../../libs/asyncStorage/locationStorage";
 
 type RouteParamsProps = {
   id: string;
@@ -77,11 +78,17 @@ export function Arrival() {
     }
   }
 
+  async function getLocationInfo() {
+    const lastSync = await getLastAsyncTimestamp();
+    const updatedAt = historic!.updated_at.getTime();
+    setDataNotSynced(updatedAt > lastSync);
+
+    const locationsStorage = await getStorageLocations();
+  }
+
   useEffect(() => {
-    getLastAsyncTimestamp().then((lastSync) =>
-      setDataNotSynced(historic!.updated_at.getTime() > lastSync)
-    );
-  }, []);
+    getLocationInfo();
+  }, [historic]);
 
   return (
     <Container>
