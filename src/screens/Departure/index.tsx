@@ -24,6 +24,7 @@ import { Loading } from "../../components/Loading";
 import { LocationInfo } from "../../components/LocationInfo";
 import { Car } from "phosphor-react-native";
 import { Maps } from "../../components/Maps";
+import { startLocationTask } from "../../tasks/backgroundLocationTask";
 
 export function Departure() {
   const descriptionRef = useRef<TextInput>(null);
@@ -78,6 +79,8 @@ export function Departure() {
           'É necessário permitir que o App tenha acesso a localização em segundo plano. Acesse as configurações do dispositivo e habilite "Permitir o tempo todo".'
         );
       }
+
+      await startLocationTask();
 
       realm.write(() => {
         realm.create(
