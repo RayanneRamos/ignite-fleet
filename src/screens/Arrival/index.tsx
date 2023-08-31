@@ -20,6 +20,8 @@ import { useEffect, useState } from "react";
 import { getLastAsyncTimestamp } from "../../libs/asyncStorage/syncStorage";
 import { stopLocationTask } from "../../tasks/backgroundLocationTask";
 import { getStorageLocations } from "../../libs/asyncStorage/locationStorage";
+import { LatLng } from "react-native-maps";
+import { Maps } from "../../components/Maps";
 
 type RouteParamsProps = {
   id: string;
@@ -33,6 +35,7 @@ export function Arrival() {
   const { goBack } = useNavigation();
   const title = historic?.status === "departure" ? "Chegada" : "Detalhes";
   const [dataNotSynced, setDataNotSynced] = useState(false);
+  const [coordinates, setCoordinates] = useState<LatLng[]>([]);
 
   function handleRemoveVehicleUsage() {
     Alert.alert("Cancelar", "Cancelar a utilização do veículo", [
@@ -84,6 +87,7 @@ export function Arrival() {
     setDataNotSynced(updatedAt > lastSync);
 
     const locationsStorage = await getStorageLocations();
+    setCoordinates(locationsStorage);
   }
 
   useEffect(() => {
@@ -93,6 +97,7 @@ export function Arrival() {
   return (
     <Container>
       <Header title={title} />
+      {coordinates.length > 0 && <Maps coordinates={coordinates} />}
       <Content>
         <Label>Placa do veículo</Label>
         <LicensePlate>{historic?.license_plate}</LicensePlate>
