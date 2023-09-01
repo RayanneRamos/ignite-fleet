@@ -26,6 +26,7 @@ import { Locations } from "../../components/Locations";
 import { getAddressLocation } from "../../utils/getAddressLocation";
 import { LocationInfoProps } from "../../components/LocationInfo";
 import dayjs from "dayjs";
+import { Loading } from "../../components/Loading";
 
 type RouteParamsProps = {
   id: string;
@@ -44,6 +45,7 @@ export function Arrival() {
     {} as LocationInfoProps
   );
   const [arrival, setArrival] = useState<LocationInfoProps | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   function handleRemoveVehicleUsage() {
     Alert.alert("Cancelar", "Cancelar a utilização do veículo", [
@@ -132,11 +134,17 @@ export function Arrival() {
         ),
       });
     }
+
+    setIsLoading(false);
   }
 
   useEffect(() => {
     getLocationInfo();
   }, [historic]);
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <Container>
