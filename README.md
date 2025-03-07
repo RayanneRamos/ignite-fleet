@@ -16,6 +16,15 @@
 
 [Ignite Fleet]() é o segundo projeto desenvolvido durante o bootcamp ignite da [Rocketseat](https://www.rocketseat.com.br/) que foca nas tecnologias ReactJS, React Native e NodeJS. Consiste em criar uma aplicação que o usuário pode criar uma conta com o Google, cadastrar um veículo pela placa e adicionar uma descrição, e criar um trajeto de saída até o destino final e fazer o registro da saída do veículo e da chegada do mesmo, ainda podendo olhar o histórico das viagens. O app funciona em offline e quando online o mesmo faz o envio automático das suas últimas viagens. Disponível nas plataformas Android e IOS.
 
+## 🌟 Funcionalidades
+
+1. **Criação de conta com o Google** 
+2. **Cadastro de veículos pela placa e descrição**
+3. **Criação de trajeto do veículo desde a saída até o destino final**
+4. **Registro da saída e chegada do veículo**
+5. **Histórico de viagens, permitindo que o usuário acompanhe as viagens anteriores**
+6. **Funcionamento offline, com envio automático das últimas viagens quando o dispositivo estiver online**
+
 ## 🧪 Technologies
 
 Esse projeto foi desenvolvido com as seguintes tecnologias:
