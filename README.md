@@ -25,7 +25,7 @@
 5. **Histórico de viagens, permitindo que o usuário acompanhe as viagens anteriores**
 6. **Funcionamento offline, com envio automático das últimas viagens quando o dispositivo estiver online**
 
-## 🧪 Technologies
+## 🧪 Tecnologias
 
 Esse projeto foi desenvolvido com as seguintes tecnologias:
 
